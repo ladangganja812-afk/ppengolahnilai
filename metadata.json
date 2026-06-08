@@ -1,0 +1,6 @@
+{
+  "name": "Pengolah Nilai Ujian",
+  "description": "Aplikasi Pengolah Nilai Ujian menjembatani data ujian dengan format absensi sekolah.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
