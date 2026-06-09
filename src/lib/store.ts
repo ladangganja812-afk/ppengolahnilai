@@ -36,13 +36,13 @@ export const getStoredDocuments = async (): Promise<ProcessedDocument[]> => {
   
   return data.map((d: any) => ({
     id: d.id,
-    mapelId: d.mapel_id,
-    mapelName: d.mapel_name,
+    mapelId: d.mapelId,
+    mapelName: d.mapelName,
     kelas: d.kelas,
-    uploadedAt: d.uploaded_at,
-    processedByAdminId: d.processed_by_admin_id,
-    totalStudents: d.total_students,
-    missingScores: d.missing_scores,
+    uploadedAt: d.uploadedAt,
+    processedByAdminId: d.processedByAdminId,
+    totalStudents: d.totalStudents,
+    missingScores: d.missingScores,
     data: d.data
   }));
 };
@@ -50,13 +50,13 @@ export const getStoredDocuments = async (): Promise<ProcessedDocument[]> => {
 export const saveDocument = async (doc: ProcessedDocument) => {
   const dbDoc = {
     id: doc.id,
-    mapel_id: doc.mapelId,
-    mapel_name: doc.mapelName,
+    mapelId: doc.mapelId,
+    mapelName: doc.mapelName,
     kelas: doc.kelas,
-    uploaded_at: doc.uploadedAt,
-    processed_by_admin_id: doc.processedByAdminId,
-    total_students: doc.totalStudents,
-    missing_scores: doc.missingScores,
+    uploadedAt: doc.uploadedAt,
+    processedByAdminId: doc.processedByAdminId,
+    totalStudents: doc.totalStudents,
+    missingScores: doc.missingScores,
     data: doc.data
   };
 
