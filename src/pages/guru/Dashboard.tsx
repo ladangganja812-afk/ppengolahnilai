@@ -10,7 +10,7 @@ export function GuruDashboard() {
   const [filterKelas, setFilterKelas] = useState("");
 
   useEffect(() => {
-    setDocuments(getStoredDocuments());
+    getStoredDocuments().then(setDocuments);
   }, []);
 
   const handleDownload = (doc: ProcessedDocument) => {

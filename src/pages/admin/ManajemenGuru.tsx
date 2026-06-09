@@ -20,9 +20,13 @@ export function ManajemenGuru() {
     loadGurus();
   }, []);
 
-  const loadGurus = () => {
-    const allUsers = getUsers();
-    setGurus(allUsers.filter((u) => u.role === "guru"));
+  const loadGurus = async () => {
+    try {
+      const allUsers = await getUsers();
+      setGurus(allUsers.filter((u) => u.role === "guru"));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleToggleKelas = (kelas: string) => {
@@ -33,7 +37,7 @@ export function ManajemenGuru() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nip || !password || !name) {
       alert("NIP, Password, dan Nama harus diisi.");
@@ -50,16 +54,21 @@ export function ManajemenGuru() {
       mapel: mapel.split(",").map((m) => m.trim()).filter((m) => m !== ""),
     };
 
-    saveUser(newUser);
-    loadGurus();
-    
-    // Reset form
-    setName("");
-    setNip("");
-    setPassword("");
-    setSelectedKelas([]);
-    setMapel("");
-    setShowForm(false);
+    try {
+      await saveUser(newUser);
+      await loadGurus();
+      
+      // Reset form
+      setName("");
+      setNip("");
+      setPassword("");
+      setSelectedKelas([]);
+      setMapel("");
+      setShowForm(false);
+    } catch (e) {
+      alert("Gagal menyimpan pengguna ke database.");
+      console.error(e);
+    }
   };
 
   return (

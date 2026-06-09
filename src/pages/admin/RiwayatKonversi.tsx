@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ProcessedDocument } from "../../types";
-import { getStoredDocuments } from "../../lib/store";
+import { getStoredDocuments, deleteDocument } from "../../lib/store";
 import { exportToExcel } from "../../lib/excel";
 import { Search, Download, FileText, Calendar, History } from "lucide-react";
 
@@ -15,8 +15,9 @@ export function RiwayatKonversi() {
     loadDocuments();
   }, []);
 
-  const loadDocuments = () => {
-    setDocuments(getStoredDocuments());
+  const loadDocuments = async () => {
+    const docs = await getStoredDocuments();
+    setDocuments(docs);
   };
 
   const handleDownload = (doc: ProcessedDocument) => {
@@ -31,10 +32,13 @@ export function RiwayatKonversi() {
   };
 
   // Allow deleting document from history
-  const handleDelete = (id: string) => {
-    const updated = documents.filter(d => d.id !== id);
-    localStorage.setItem("app_documents", JSON.stringify(updated));
-    setDocuments(updated);
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteDocument(id);
+      await loadDocuments();
+    } catch (e) {
+      alert("Gagal menghapus dokumen dari database");
+    }
   };
 
   const filteredDocs = documents.filter(doc => {

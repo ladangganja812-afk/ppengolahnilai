@@ -117,15 +117,19 @@ export function ProcessGrades({ user }: { user: any }) {
     }
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (result) {
-      saveDocument(result);
-      setResult(null);
-      setTemplateFile(null);
-      setScoresFile(null);
-      setMapel("");
-      setKelas("");
-      alert("Dokumen berhasil dipublikasikan ke Guru.");
+      try {
+        await saveDocument(result);
+        setResult(null);
+        setTemplateFile(null);
+        setScoresFile(null);
+        setMapel("");
+        setKelas("");
+        alert("Dokumen berhasil dipublikasikan ke Guru.");
+      } catch (err) {
+        alert("Gagal menyimpan dokumen ke database.");
+      }
     }
   };
 

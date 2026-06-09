@@ -7,10 +7,10 @@ export function MasterData() {
   const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {
-    setStudents(getStoredStudents());
+    getStoredStudents().then(setStudents);
   }, []);
 
-  const handleAddMockData = () => {
+  const handleAddMockData = async () => {
     const mock: Student[] = [
       { id: "1", nomorPeserta: "P-001", nama: "Anisa Fitri", kelas: "8A" },
       { id: "2", nomorPeserta: "P-002", nama: "Budi Santoso", kelas: "8A" },
@@ -18,8 +18,13 @@ export function MasterData() {
       { id: "4", nomorPeserta: "P-004", nama: "Deni Sumargo", kelas: "8B" },
       { id: "5", nomorPeserta: "P-005", nama: "Eka Wardani", kelas: "8B" },
     ];
-    saveStudents(mock);
-    setStudents(mock);
+    try {
+      await saveStudents(mock);
+      const updated = await getStoredStudents();
+      setStudents(updated);
+    } catch (e) {
+      alert("Gagal menyimpan data contoh ke database");
+    }
   };
 
   return (

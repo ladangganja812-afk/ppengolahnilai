@@ -8,16 +8,21 @@ export function Login({ onLogin }: { onLogin: (user: any) => void }) {
   const [loginType, setLoginType] = useState<"guru" | "admin">("guru");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const users = getUsers();
-    
-    const foundUser = users.find(u => u.username === username && u.password === password && u.role === loginType);
-    
-    if (foundUser) {
-      onLogin(foundUser);
-    } else {
-      setError(`${loginType === 'admin' ? 'Username' : 'NIP'} atau Password salah.`);
+    try {
+      const users = await getUsers();
+      
+      const foundUser = users.find(u => u.username === username && u.password === password && u.role === loginType);
+      
+      if (foundUser) {
+        onLogin(foundUser);
+      } else {
+        setError(`${loginType === 'admin' ? 'Username' : 'NIP'} atau Password salah.`);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Terjadi kesalahan sistem saat login.");
     }
   };
 
