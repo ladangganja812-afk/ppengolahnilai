@@ -1,4 +1,4 @@
-import { ProcessedDocument, Student, Mapel, User } from "./types";
+import { ProcessedDocument, Student, Mapel, User } from "../types";
 import { supabase } from "./supabase";
 
 const INITIAL_USERS: User[] = [
@@ -31,11 +31,36 @@ export const getStoredDocuments = async (): Promise<ProcessedDocument[]> => {
     console.error("Error fetching documents:", error);
     return [];
   }
-  return data || [];
+  
+  if (!data) return [];
+  
+  return data.map((d: any) => ({
+    id: d.id,
+    mapelId: d.mapel_id,
+    mapelName: d.mapel_name,
+    kelas: d.kelas,
+    uploadedAt: d.uploaded_at,
+    processedByAdminId: d.processed_by_admin_id,
+    totalStudents: d.total_students,
+    missingScores: d.missing_scores,
+    data: d.data
+  }));
 };
 
 export const saveDocument = async (doc: ProcessedDocument) => {
-  const { error } = await supabase.from('app_documents').insert([doc]);
+  const dbDoc = {
+    id: doc.id,
+    mapel_id: doc.mapelId,
+    mapel_name: doc.mapelName,
+    kelas: doc.kelas,
+    uploaded_at: doc.uploadedAt,
+    processed_by_admin_id: doc.processedByAdminId,
+    total_students: doc.totalStudents,
+    missing_scores: doc.missingScores,
+    data: doc.data
+  };
+
+  const { error } = await supabase.from('app_documents').insert([dbDoc]);
   if (error) {
     console.error("Error saving document:", error);
     throw error;
@@ -51,18 +76,10 @@ export const deleteDocument = async (id: string) => {
 };
 
 export const getStoredStudents = async (): Promise<Student[]> => {
-  const { data, error } = await supabase.from('app_students').select('*');
-  if (error) {
-    console.error("Error fetching students:", error);
-    return [];
-  }
-  return data || [];
+  const data = localStorage.getItem("app_students");
+  return data ? JSON.parse(data) : [];
 };
 
 export const saveStudents = async (students: Student[]) => {
-  const { error } = await supabase.from('app_students').insert(students);
-  if (error) {
-    console.error("Error saving students:", error);
-    throw error;
-  }
+  localStorage.setItem("app_students", JSON.stringify(students));
 };
